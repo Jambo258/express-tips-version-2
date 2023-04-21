@@ -39,7 +39,7 @@ const getTipByIdPlainText = async (req, res, next) => {
       const newId2 = Math.floor(Math.random() * 100) + 1;
       const remainder = newId % newId2;
       // console.log(remainder)
-      fetchData(remainder)
+      fetchData(remainder);
     } else {
       res.send(tip.description);
     }
