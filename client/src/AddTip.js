@@ -12,7 +12,7 @@ function AddTip() {
       const newTip = { description: formikTip.values.description };
       try {
         const response = await axios.post(
-          `http://localhost:3000/addtip`,
+          `${process.env.REACT_APP_LOCAL_BACKEND_URL}/addtip`,
           newTip,
           {
             headers: {

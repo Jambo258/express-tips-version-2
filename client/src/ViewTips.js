@@ -18,16 +18,18 @@ import { useFormik } from "formik";
 function ViewTips() {
   const [data, setData] = useState([]);
   const [openEditTip, setOpenEditTip] = useState(false);
-  const [index, setIndex] = useState();
+  const [id, setId] = useState();
+  const [editText, setEditText] = useState("");
 
-  const resetValues = () => {
-    formikTip.values.description = "";
-    formikTip.errors.description = "";
+
+  const handleCancel = () => {
+    formikTip.resetForm();
   };
 
-  const handleTipClickOpen = (id) => {
+  const handleTipClickOpen = (id, index) => {
     setOpenEditTip(true);
-    setIndex(id);
+    setId(id)
+    setEditText(data[index].description)
   };
 
   const handleTipClose = () => {
@@ -36,8 +38,10 @@ function ViewTips() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`http://localhost:3000/getall`);
-      // console.log(response)
+      const response = await axios.get(
+        `${process.env.REACT_APP_LOCAL_BACKEND_URL}/getall`
+      );
+       console.log(response)
       setData(response.data.tips);
     };
     fetchData();
@@ -46,7 +50,7 @@ function ViewTips() {
   const deleteTip = async (tid) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/${tid}/delete`
+        `${process.env.REACT_APP_LOCAL_BACKEND_URL}/${tid}/delete`
       );
       console.log(response);
 
@@ -58,7 +62,7 @@ function ViewTips() {
     const editedTip = { description: formikTip.values.description };
     try {
       const response = await axios.patch(
-        `http://localhost:3000/${index}/update`,
+        `${process.env.REACT_APP_LOCAL_BACKEND_URL}/${id}/update`,
         editedTip,
         {
           headers: {
@@ -70,13 +74,13 @@ function ViewTips() {
 
       setData(() => {
         const newTips = [...data];
-        console.log(newTips);
-        const Index = newTips.findIndex((tip) => tip.id === index);
-        console.log(Index);
-        newTips[Index].description = formikTip.values.description;
+        // console.log(newTips);
+        const foundIndex = newTips.findIndex((tip) => tip.id === id);
+        // console.log(foundIndex);
+        newTips[foundIndex].description = formikTip.values.description;
+        // console.log([...newTips])
         return [...newTips];
       });
-      resetValues();
       handleTipClose();
     } catch (err) {}
   };
@@ -90,9 +94,12 @@ function ViewTips() {
     return errors;
   };
 
+  // console.log(editText)
+
   const formikTip = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      description: "",
+      description: editText,
     },
     validate: validateTip,
     onSubmit: editTip,
@@ -111,9 +118,9 @@ function ViewTips() {
         </TableHead>
         <TableBody>
           {data &&
-            data.map((item) => (
+            data.map((item, index) => (
               <TableRow
-                key={item.id}
+                key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -131,7 +138,7 @@ function ViewTips() {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      handleTipClickOpen(item.id);
+                      handleTipClickOpen(item.id, index);
                     }}
                   >
                     Edit
@@ -142,7 +149,7 @@ function ViewTips() {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                     onClose={() => {
-                        handleTipClose();
+                      handleTipClose();
                     }}
                   >
                     <Box
@@ -152,13 +159,16 @@ function ViewTips() {
                       sx={{ mt: 3 }}
                     >
                       <DialogTitle id="alert-dialog-title">
-                        Change Tip Id: {index}
+                        Change Tip Id: {id}
                         <TextField
                           name="description"
                           required
+                          variant="outlined"
                           fullWidth
                           id="description"
                           label="Description"
+                          multiline={true}
+                          rows={10}
                           autoFocus
                           onChange={formikTip.handleChange}
                           value={formikTip.values.description}
@@ -173,8 +183,8 @@ function ViewTips() {
                         <Button
                           variant="contained"
                           onClick={() => {
+                            handleCancel();
                             handleTipClose();
-                            resetValues();
                           }}
                         >
                           Cancel

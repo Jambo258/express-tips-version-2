@@ -34,7 +34,7 @@ node add_data_to_db.js
 ````
 to start webserver run following command in the nodeapp folder
 ````
-node app.js
+npm run dev
 ````
 
 
@@ -79,6 +79,12 @@ http://localhost:3000/addtip
 
 # Running the frontend with database and backend
 
+create .env file in the client folder with value:
+
+````
+REACT_APP_LOCAL_BACKEND_URL=http://localhost:3000
+````
+
 install dependencies in the client folder with command
 ````
 npm install
@@ -87,13 +93,13 @@ start database in docker container by running the following command in the root 
 ````
 docker compose up
 ````
-add data to the database by navigating to nodeapp/scrips and run command
+add data to the database by navigating to nodeapp/scrips and run command (not needed if you did it previously)
 ````
 node add_data_to_db.js
 ````
 to start webserver run following command in the nodeapp folder
 ````
-node app.js
+npm run dev
 ````
 to start frontend run following command in the client folder
 ````
@@ -111,6 +117,28 @@ npm start
     <p>Edit Tip</p>
     <img src="/screenshots/frontend_viewtips_edit.png" width="600px"</img>
 </div>
+
+# Run entire application in Docker
+
+In the root directory of the project run command
+````
+docker-compose -f docker-compose.full.yml up
+````
+
+if you want to run containers in the background run command
+````
+docker-compose -f docker-compose.full.yml up -d
+````
+
+if you wanna just rebuild the containers run command
+````
+docker-compose -f docker-compose.full.yml up --build
+````
+
+add data to the database by navigating to nodeapp/scrips and run command (not needed if you did it previously)
+````
+node add_data_to_db.js
+````
 
 # Links and References
 

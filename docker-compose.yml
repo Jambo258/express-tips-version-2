@@ -13,3 +13,4 @@ services:
     restart: always
     volumes:
       - /var/lib/postgresql/data
+    container_name: database

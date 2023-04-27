@@ -2,9 +2,11 @@ import { getTips, deleteTipById, updateTipById, getTipById, addNewTip, getTipByI
 import express from "express";
 import bodyParser from "body-parser";
 import { check } from "express-validator";
+import cors from "cors";
 // const express = require('express')
 const app = express()
 const port = 3000
+app.use(cors());
 // var dt = require('./modules/totd.js')
 
 
