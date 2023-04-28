@@ -13,39 +13,25 @@ services:
     restart: always
     volumes:
       - /var/lib/postgresql/data
-  api:
+  api_static:
     build:
       context: ./nodeapp
-      dockerfile: Dockerfile
+      dockerfile: static.Dockerfile
     environment:
       DB_PORT: 5432
       DB_HOST: db
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: tips
-      CHOKIDAR_USEPOLLING: true
-      WATCHPACK_POLLING: true
     ports:
       - "3000:3000"
     restart: always
-    volumes:
-      - ./nodeapp:/opt/api
-    command: npm run dev
-  client:
+  client_static:
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: static.Dockerfile
     restart: always
     ports:
-      - 80:3000
-    depends_on:
-      - api
+      - 80:80
     environment:
       REACT_APP_LOCAL_BACKEND_URL: http://localhost:3000
-      CHOKIDAR_USEPOLLING: true
-      WATCHPACK_POLLING: true
-      WDS_SOCKET_PORT: 80
-    volumes:
-      - ./client:/opt/client
-      - /opt/client/node_modules
-    command: npm start

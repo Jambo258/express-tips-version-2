@@ -140,6 +140,16 @@ add data to the database by navigating to nodeapp/scrips and run command (not ne
 node add_data_to_db.js
 ````
 
+If you wanna run static version of the application run command
+````
+docker-compose -f docker-compose.static.yml up
+````
+
+if you wanna just rebuild the static containers run command
+````
+docker-compose -f docker-compose.static.yml up --build
+````
+
 # Links and References
 
 * https://docs.gitlab.com/ee/ci/pipelines/
